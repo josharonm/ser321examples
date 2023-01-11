@@ -39,7 +39,8 @@ public class Fraction {
 
    public static void main (String args[]) {
       
-      int num, denom;
+      int num = 1;
+      int denom = 3;
       
       try {
          // create a new instance
@@ -63,10 +64,10 @@ public class Fraction {
          frac.setDenominator(3);
          
          // change values if argument
-         if (num != null) {
+         if (num != 1) {
             frac.setNumerator(num);
          }
-         if (denom != null) {
+         if (denom != 3) {
             frac.setDenominator(denom);
          }
 
