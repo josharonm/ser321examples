@@ -45,10 +45,10 @@ public class Fraction {
 
          try {
             if (args[0] != null) {
-               num = Integer.parseInt(args[0]);
+               int num = Integer.parseInt(args[0]);
             }
             if (args[1] != null) {
-               denom = Integer.parseInt(args[1]);
+               int denom = Integer.parseInt(args[1]);
             }
          } catch (NumberFormatException nfe) {
             System.out.println("Arguments must be an integers!");
