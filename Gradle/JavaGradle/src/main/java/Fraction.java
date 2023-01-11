@@ -43,9 +43,29 @@ public class Fraction {
          // Fraction *frac = [[Fraction alloc] init];
          Fraction frac = new Fraction();
 
-         // set the values
+         try {
+            if (args[0] != Null) {
+               num = Integer.parseInt(args[0]);
+            }
+            if (args[1] != Null) {
+               denom = Integer.parseInt(args[1]);
+            }
+         } catch (NumberFormatException nfe) {
+            System.out.println("Arguments must be an integers!");
+            System.exit(2);
+         }
+         
+         // set the default values
          frac.setNumerator(1);
          frac.setDenominator(3);
+         
+         // change values if argument
+         if (num) {
+            frac.setNumerator(num);
+         }
+         if (denom) {
+            frac.setDenominator(denom);
+         }
 
          // print it
          System.out.print("The fraction is: ");
