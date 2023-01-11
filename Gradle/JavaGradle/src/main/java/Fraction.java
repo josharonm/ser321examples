@@ -44,10 +44,10 @@ public class Fraction {
          Fraction frac = new Fraction();
 
          try {
-            if (args[0] != Null) {
+            if (args[0] != null) {
                num = Integer.parseInt(args[0]);
             }
-            if (args[1] != Null) {
+            if (args[1] != null) {
                denom = Integer.parseInt(args[1]);
             }
          } catch (NumberFormatException nfe) {
