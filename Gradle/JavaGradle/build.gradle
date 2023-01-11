@@ -51,10 +51,38 @@ task runFraction(type: JavaExec) {
   main = 'Fraction'
 }
 
+// define default values
+def num = 1
+def denom = 3
+
+// task reading in the arguments if any given, if not the default from above will be used
+task arguments {
+    if (project.hasProperty("num")) {
+      num = project.getProperty("num")
+    }
+    if (project.hasProperty("denom")) {
+      denom = project.getProperty("denom")
+    }
+}
+
 // Try:
 // 1. Change Fraction.main so it accepts 2 arguments
 // 2. Create a new gradle tasks that accepts two arguments and 
 //    can be called as: gradle runFrac -Pdenom=4 -Pnum=3 or as gradle runFrac -Pnum=3 -Pdenom=4 , also make sure it can run with only 1 or no arguments
+
+task runFrac(type: JavaExec) {
+  dependsOn arguments
+  group 'Fraction Tasks'
+  description 'Tasks which runs Fraction with 1 or 2'
+
+  classpath = sourceSets.main.runtimeClasspath
+
+  main = 'Fraction'
+  
+  // default
+  args num
+  args denom
+}
 
 // Example how you can add that libraries can be pulled from mavenCentral()
 // repositories {
