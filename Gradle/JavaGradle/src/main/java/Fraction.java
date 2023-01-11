@@ -63,10 +63,10 @@ public class Fraction {
          frac.setDenominator(3);
          
          // change values if argument
-         if (num) {
+         if (num != null) {
             frac.setNumerator(num);
          }
-         if (denom) {
+         if (denom != null) {
             frac.setDenominator(denom);
          }
 
