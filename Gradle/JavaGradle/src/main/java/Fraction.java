@@ -38,6 +38,9 @@ public class Fraction {
    }
 
    public static void main (String args[]) {
+      
+      int num, denom;
+      
       try {
          // create a new instance
          // Fraction *frac = [[Fraction alloc] init];
@@ -45,10 +48,10 @@ public class Fraction {
 
          try {
             if (args[0] != null) {
-               int num = Integer.parseInt(args[0]);
+               num = Integer.parseInt(args[0]);
             }
             if (args[1] != null) {
-               int denom = Integer.parseInt(args[1]);
+               denom = Integer.parseInt(args[1]);
             }
          } catch (NumberFormatException nfe) {
             System.out.println("Arguments must be an integers!");
