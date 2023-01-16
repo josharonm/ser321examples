@@ -199,7 +199,8 @@ class WebServer {
 
           Map<String, String> query_pairs = new LinkedHashMap<String, String>();
 
-          Integer num1, num2;
+          Integer num1 = 1;
+          Integer num2 = 1;
           boolean q = true;
 
           // extract path parameters
@@ -209,8 +210,6 @@ class WebServer {
             q = false;
             builder.append("HTTP/1.1 418 I'm a Little Teapot - and there are query errors\n");
             builder.append("Using default values for num1 and num2: 1\n");
-            num1 = 1;
-            num2 = 1;
           }
 
           boolean bnum1 = true;
@@ -224,7 +223,6 @@ class WebServer {
               bnum1 = false;
               builder.append("HTTP/1.1 422 Unprocessable Entity - num1\n");
               builder.append("Using default value for num1: 1\n");
-              num1 = 1;
             }
             try {
               num2 = Integer.parseInt(query_pairs.get("num2"));
@@ -232,7 +230,6 @@ class WebServer {
               bnum2 = false;
               builder.append("HTTP/1.1 422 Unprocessable Entity - num2\n");
               builder.append("Using default value for num2: 1\n");
-              num2 = 1;
             }
           }
 
