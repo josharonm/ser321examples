@@ -198,35 +198,48 @@ class WebServer {
           // wrong data is given this just crashes
 
           Map<String, String> query_pairs = new LinkedHashMap<String, String>();
-          // extract path parameters
-          query_pairs = splitQuery(request.replace("multiply?", ""));
 
           Integer num1, num2;
+          boolean q = true;
+
+          // extract path parameters
+          try {
+            query_pairs = splitQuery(request.replace("multiply?", ""));
+          } catch (UnsupportedEncodingException ex) {
+            q = false;
+            builder.append("HTTP/1.1 418 I'm a Little Teapot - and there are query errors\n");
+            builder.append("Using default values for num1 and num2: 1\n");
+            num1 = 1;
+            num2 = 1;
+          }
+
           boolean bnum1 = true;
           boolean bnum2 = true;
 
           // extract required fields from parameters
-          try {
-            num1 = Integer.parseInt(query_pairs.get("num1"));
-          } catch (Exception ex) {
-            bnum1 = false;
-            builder.append("HTTP/1.1 422 Unprocessable Entity - num1\n");
-            builder.append("Using default value for num1: 1\n");
-            num1 = 1;
-          }
-          try {
-            num2 = Integer.parseInt(query_pairs.get("num2"));
-          } catch (Exception ex) {
-            bnum2 = false;
-            builder.append("HTTP/1.1 422 Unprocessable Entity - num2\n");
-            builder.append("Using default value for num2: 1\n");
-            num2 = 1;
+          if (q == true) {
+            try {
+              num1 = Integer.parseInt(query_pairs.get("num1"));
+            } catch (Exception ex) {
+              bnum1 = false;
+              builder.append("HTTP/1.1 422 Unprocessable Entity - num1\n");
+              builder.append("Using default value for num1: 1\n");
+              num1 = 1;
+            }
+            try {
+              num2 = Integer.parseInt(query_pairs.get("num2"));
+            } catch (Exception ex) {
+              bnum2 = false;
+              builder.append("HTTP/1.1 422 Unprocessable Entity - num2\n");
+              builder.append("Using default value for num2: 1\n");
+              num2 = 1;
+            }
           }
 
           // do math
           Integer result = num1 * num2;
 
-          if (bnum1 == true && bnum2 == true) {
+          if (q == true && bnum1 == true && bnum2 == true) {
             builder.append("HTTP/1.1 200 OK\n");
           } else {
             // Generate response
