@@ -201,21 +201,40 @@ class WebServer {
           // extract path parameters
           query_pairs = splitQuery(request.replace("multiply?", ""));
 
+          Integer num1, num2;
+          boolean bnum1 = true;
+          boolean bnum2 = true;
+
           // extract required fields from parameters
-          Integer num1 = Integer.parseInt(query_pairs.get("num1"));
-          Integer num2 = Integer.parseInt(query_pairs.get("num2"));
+          try {
+            num1 = Integer.parseInt(query_pairs.get("num1"));
+          } catch (Exception ex) {
+            bnum1 = false;
+            builder.append("HTTP/1.1 422 Unprocessable Entity - num1\n");
+            builder.append("Using default value for num1: 1\n");
+            num1 = 1;
+          }
+          try {
+            num2 = Integer.parseInt(query_pairs.get("num2"));
+          } catch (Exception ex) {
+            bnum2 = false;
+            builder.append("HTTP/1.1 422 Unprocessable Entity - num2\n");
+            builder.append("Using default value for num2: 1\n");
+            num2 = 1;
+          }
 
           // do math
           Integer result = num1 * num2;
 
-          // Generate response
-          builder.append("HTTP/1.1 200 OK\n");
-          builder.append("Content-Type: text/html; charset=utf-8\n");
-          builder.append("\n");
-          builder.append("Result is: " + result);
-
-          // TODO: Include error handling here with a correct error code and
-          // a response that makes sense
+          if (bnum1 == true && bnum2 == true) {
+            builder.append("HTTP/1.1 200 OK\n");
+          } else {
+            // Generate response
+            builder.append("Content-Type: text/html; charset=utf-8\n");
+            builder.append("\n");
+            builder.append("Result is: " + result + "\n");
+          }
+          
 
         } else if (request.contains("github?")) {
           // pulls the query from the request and runs it with GitHub's REST API
