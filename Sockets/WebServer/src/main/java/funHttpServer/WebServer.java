@@ -290,7 +290,7 @@ class WebServer {
    * @return Map of all parameters and their specific values
    * @throws UnsupportedEncodingException If the URLs aren't encoded with UTF-8
    */
-  public static Map<String, String> splitQuery(String query) throws UnsupportedEncodingException {
+  public static Map<String, String> splitQuery(String query) throws UnsupportedEncodingException, Exception {
     Map<String, String> query_pairs = new LinkedHashMap<String, String>();
     // "q=hello+world%2Fme&bob=5"
     try {
