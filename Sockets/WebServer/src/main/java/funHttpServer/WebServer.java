@@ -282,7 +282,7 @@ class WebServer {
 //            System.out.println(repoName);
 
             // get repo id
-            String repoId = repo.getString("id");
+            String repoId = Double.toString(repo.getDouble("id"));
             jsonBuild.append("ID: " + repoId + "\n");
 //            System.out.println(repoId);
 
