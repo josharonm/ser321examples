@@ -278,7 +278,7 @@ class WebServer {
                 if (json.equalsIgnoreCase("null")) {
                   q = false;
                   builder.append("HTTP/1.1 400 Bad Request\n");
-                  json.append("I'm hungry. Need path.");
+                  jsonBuild.append("I'm hungry. Need path.");
                 } else {
                   //          System.out.println(json);
 
