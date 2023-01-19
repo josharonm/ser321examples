@@ -315,10 +315,12 @@ class WebServer {
               } catch (Exception ex) {
                 q = false;
                 builder.append("HTTP/1.1 422 Unprocessable Entity - the path is broken\n");
+                jsonBuild.append("The Path is Broken.");
               }
             } catch (Exception ex) {
               q = false;
               builder.append("HTTP/1.1 418 I'm a Little Teapot - and there are query errors\n");
+              jsonBuild.append("Query Errors");
             }
           }
 
