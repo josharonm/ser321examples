@@ -278,18 +278,18 @@ class WebServer {
 
             // get repo name
             String repoName = repo.getString("full_name");
-            jsonBuild.append("full_name: " + repoName + "\n");
+            jsonBuild.append("full_name: " + repoName + " \n");
 //            System.out.println(repoName);
 
             // get repo id
-            String repoId = Double.toString(repo.getDouble("id"));
-            jsonBuild.append("ID: " + repoId + "\n");
+            String repoId = Integer.toString(repo.getInt("id"));
+            jsonBuild.append("ID: " + repoId + " \n");
 //            System.out.println(repoId);
 
             // owner is a JSON object in the repo object, get it and save it in own variable then read the login name
             JSONObject owner = repo.getJSONObject("owner");
             String ownername = owner.getString("login");
-            jsonBuild.append("Owner Login: " + ownername + "\n");
+            jsonBuild.append("Owner Login: " + ownername + " \n");
 //            System.out.println(ownername);
           }
 
