@@ -266,7 +266,7 @@ class WebServer {
 
           if (request.equals("github?")) {
             builder.append("HTTP/1.1 418 I'm a Little Teapot - and there are query errors\n");
-            json.append("I'm hungry. Need path.\n");
+            jsonBuild.append("I'm hungry. Need path.\n");
             q = false;
           } else {
             try {
