@@ -219,56 +219,56 @@ class WebServer {
           // TODO: Include error handling here with a correct error code and
           // a response that makes sense
 
-          // This multiplies two numbers, there is NO error handling, so when
-          // wrong data is given this just crashes
-
-          Map<String, String> query_pairs = new LinkedHashMap<String, String>();
-
-          Integer num1 = 1;
-          Integer num2 = 1;
-          boolean q = true;
-
-          // extract path parameters
-          try {
-            query_pairs = splitQuery(request.replace("multiply?", ""));
-          } catch (UnsupportedEncodingException ex) {
-            q = false;
-            builder.append("HTTP/1.1 418 I'm a Little Teapot - and there are query errors\n");
-            builder.append("Using default values for num1 and num2: 1\n");
-          }
-
-          boolean bnum1 = true;
-          boolean bnum2 = true;
-
-          // extract required fields from parameters
-          if (q == true) {
-            try {
-              num1 = Integer.parseInt(query_pairs.get("num1"));
-            } catch (Exception ex) {
-              bnum1 = false;
-              builder.append("HTTP/1.1 422 Unprocessable Entity - num1\n");
-              builder.append("Using default value for num1: 1\n");
-            }
-            try {
-              num2 = Integer.parseInt(query_pairs.get("num2"));
-            } catch (Exception ex) {
-              bnum2 = false;
-              builder.append("HTTP/1.1 422 Unprocessable Entity - num2\n");
-              builder.append("Using default value for num2: 1\n");
-            }
-          }
-
-          // do math
-          Integer result = num1 * num2;
-
-          if (q == true && bnum1 == true && bnum2 == true) {
-            builder.append("HTTP/1.1 200 OK\n");
-          } else {
-            // Generate response
-            builder.append("Content-Type: text/html; charset=utf-8\n");
-            builder.append("\n");
-            builder.append("Result is: " + result + "\n");
-          }
+//          // This multiplies two numbers, there is NO error handling, so when
+//          // wrong data is given this just crashes
+//
+//          Map<String, String> query_pairs = new LinkedHashMap<String, String>();
+//
+//          Integer num1 = 1;
+//          Integer num2 = 1;
+//          boolean q = true;
+//
+//          // extract path parameters
+//          try {
+//            query_pairs = splitQuery(request.replace("multiply?", ""));
+//          } catch (UnsupportedEncodingException ex) {
+//            q = false;
+//            builder.append("HTTP/1.1 418 I'm a Little Teapot - and there are query errors\n");
+//            builder.append("Using default values for num1 and num2: 1\n");
+//          }
+//
+//          boolean bnum1 = true;
+//          boolean bnum2 = true;
+//
+//          // extract required fields from parameters
+//          if (q == true) {
+//            try {
+//              num1 = Integer.parseInt(query_pairs.get("num1"));
+//            } catch (Exception ex) {
+//              bnum1 = false;
+//              builder.append("HTTP/1.1 422 Unprocessable Entity - num1\n");
+//              builder.append("Using default value for num1: 1\n");
+//            }
+//            try {
+//              num2 = Integer.parseInt(query_pairs.get("num2"));
+//            } catch (Exception ex) {
+//              bnum2 = false;
+//              builder.append("HTTP/1.1 422 Unprocessable Entity - num2\n");
+//              builder.append("Using default value for num2: 1\n");
+//            }
+//          }
+//
+//          // do math
+//          Integer result = num1 * num2;
+//
+//          if (q == true && bnum1 == true && bnum2 == true) {
+//            builder.append("HTTP/1.1 200 OK\n");
+//          } else {
+//            // Generate response
+//            builder.append("Content-Type: text/html; charset=utf-8\n");
+//            builder.append("\n");
+//            builder.append("Result is: " + result + "\n");
+//          }
           
 
         } else if (request.contains("github?")) {
