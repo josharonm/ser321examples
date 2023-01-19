@@ -204,11 +204,13 @@ class WebServer {
           Integer num1 = 1;
           Integer num2 = 1;
           boolean q = true;
+          StringBuilder multBuild = new StringBuilder();
 
           // check for arguments
           if (request.equals("multiply?")) {
             builder.append("HTTP/1.1 418 I'm a Little Teapot - and there are query errors\n");
-            builder.append("Using default values for num1 and num2: 1\n");
+            multBuild.append("Using default values for num1 and num2: 1\n");
+            q = false;
           } else {
             // extract path parameters
             try {
@@ -218,7 +220,7 @@ class WebServer {
               } catch (Exception ex) {
                 q = false;
                 builder.append("HTTP/1.1 422 Unprocessable Entity - num1\n");
-                builder.append("Using default value for num1: 1\n");
+                multBuild.append("Using default value for num1: 1\n");
               }
 
               try {
@@ -226,12 +228,12 @@ class WebServer {
               } catch (Exception ex) {
                 q = false;
                 builder.append("HTTP/1.1 422 Unprocessable Entity - num2\n");
-                builder.append("Using default value for num2: 1\n");
+                multBuild.append("Using default value for num2: 1\n");
               }
             } catch (Exception ex) {
               q = false;
               builder.append("HTTP/1.1 418 I'm a Little Teapot - and there are query errors\n");
-              builder.append("Using default values for num1 and num2: 1\n");
+              multBuild.append("Using default values for num1 and num2: 1\n");
             }
           }
 
@@ -244,6 +246,7 @@ class WebServer {
           }
           builder.append("Content-Type: text/html; charset=utf-8\n");
           builder.append("\n");
+          builder.append(multBuild + " \n");
           builder.append("Result is: " + result);
 
         } else if (request.contains("github?")) {
@@ -256,48 +259,77 @@ class WebServer {
           //     "/repos/OWNERNAME/REPONAME/contributors"
 
           Map<String, String> query_pairs = new LinkedHashMap<String, String>();
-          query_pairs = splitQuery(request.replace("github?", ""));
-          String json = fetchURL("https://api.github.com/" + query_pairs.get("query"));
-//          System.out.println(json);
 
+          boolean q = true;
           // new String Builder
           StringBuilder jsonBuild = new StringBuilder();
 
-          // saving it as JSON array (if it sere not an array it woudl need to be a JSONObject)
-          JSONArray repoArray = new JSONArray(json);
+          if (request.equals("github?")) {
+            builder.append("HTTP/1.1 418 I'm a Little Teapot - and there are query errors\n");
+            json.append("I'm hungry. Need path.\n");
+            q = false;
+          } else {
+            try {
+              query_pairs = splitQuery(request.replace("github?", ""));
 
-          // new JSON which we want to save later on
-          JSONArray newjSON = new JSONArray();
+              try {
+                String json = fetchURL("https://api.github.com/" + query_pairs.get("query"));
 
-          // go through all the entries in the JSON array (so all the repos of the user)
-          for(int i=0; i<repoArray.length(); i++) {
+                if (json.equalsIgnoreCase("null")) {
+                  q = false;
+                  builder.append("HTTP/1.1 400 Bad Request\n");
+                  json.append("I'm hungry. Need path.")
+                } else {
+                  //          System.out.println(json);
 
-            // now we have a JSON object, one repo
-            JSONObject repo = repoArray.getJSONObject(i);
-            jsonBuild.append("------------------------------\n");
+                  // saving it as JSON array (if it sere not an array it woudl need to be a JSONObject)
+                  JSONArray repoArray = new JSONArray(json);
 
-            // get repo name
-            String repoName = repo.getString("full_name");
-            jsonBuild.append("full_name: " + repoName + " \n");
-//            System.out.println(repoName);
+                  // new JSON which we want to save later on
+                  JSONArray newjSON = new JSONArray();
 
-            // get repo id
-            String repoId = Integer.toString(repo.getInt("id"));
-            jsonBuild.append("ID: " + repoId + " \n");
-//            System.out.println(repoId);
+                  // go through all the entries in the JSON array (so all the repos of the user)
+                  for(int i=0; i<repoArray.length(); i++) {
 
-            // owner is a JSON object in the repo object, get it and save it in own variable then read the login name
-            JSONObject owner = repo.getJSONObject("owner");
-            String ownername = owner.getString("login");
-            jsonBuild.append("Owner Login: " + ownername + " \n");
-//            System.out.println(ownername);
+                    // now we have a JSON object, one repo
+                    JSONObject repo = repoArray.getJSONObject(i);
+                    jsonBuild.append("------------------------------\n");
+
+                    // get repo name
+                    String repoName = repo.getString("full_name");
+                    jsonBuild.append("full_name: " + repoName + " \n");
+//                System.out.println(repoName);
+
+                    // get repo id
+                    String repoId = Integer.toString(repo.getInt("id"));
+                    jsonBuild.append("ID: " + repoId + " \n");
+//                System.out.println(repoId);
+
+                    // owner is a JSON object in the repo object, get it and save it in own variable then read the login name
+                    JSONObject owner = repo.getJSONObject("owner");
+                    String ownername = owner.getString("login");
+                    jsonBuild.append("Owner Login: " + ownername + " \n");
+//                System.out.println(ownername);
+                  }
+                }
+              } catch (Exception ex) {
+                q = false;
+                builder.append("HTTP/1.1 422 Unprocessable Entity - the path is broken\n");
+              }
+            } catch (Exception ex) {
+              q = false;
+              builder.append("HTTP/1.1 418 I'm a Little Teapot - and there are query errors\n");
+            }
           }
 
-          builder.append("HTTP/1.1 200 OK\n");
+          if (q == true) {
+            builder.append("HTTP/1.1 200 OK\n");
+          }
           builder.append("Content-Type: text/html; charset=utf-8\n");
           builder.append("\n");
           builder.append(jsonBuild);
           builder.append("------------------------------\n");
+
           // TODO: Parse the JSON returned by your fetch and create an appropriate
           // response based on what the assignment document asks for
 
@@ -427,6 +459,7 @@ class WebServer {
       in.close();
     } catch (Exception ex) {
       System.out.println("Exception in url request:" + ex.getMessage());
+      sb = null;
     }
     return sb.toString();
   }
