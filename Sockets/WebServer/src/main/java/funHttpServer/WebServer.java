@@ -206,7 +206,7 @@ class WebServer {
 //          Integer num2 = Integer.parseInt(query_pairs.get("num2"));
 
           Integer num1 = 1;
-          Integer num1 = 2;
+          Integer num2 = 2;
           // do math
           Integer result = num1 * num2;
 
