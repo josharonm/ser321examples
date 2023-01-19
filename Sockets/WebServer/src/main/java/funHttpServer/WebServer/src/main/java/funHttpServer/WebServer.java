@@ -10,7 +10,7 @@ You can also do some other simple GET requests:
    JSON which will for now only be printed in the console. See the todo below
 
 The reading of the request is done "manually", meaning no library that helps making things a 
-little easier is used. This is done so you see exactly how to pars the request and 
+little easier is used. This is done so you see exactly how to parse the request and
 write a response back
 */
 
@@ -25,6 +25,7 @@ import java.util.Random;
 import java.util.Map;
 import java.util.LinkedHashMap;
 import java.nio.charset.Charset;
+import org.json.*;
 
 class WebServer {
   public static void main(String args[]) {
@@ -147,7 +148,7 @@ class WebServer {
         } else if (request.equalsIgnoreCase("json")) {
           // shows the JSON of a random image and sets the header name for that image
 
-          // pick a index from the map
+          // pick an index from the map
           int index = random.nextInt(_images.size());
 
           // pull out the information
@@ -245,10 +246,6 @@ class WebServer {
           builder.append("\n");
           builder.append("Result is: " + result);
 
-          // TODO: Include error handling here with a correct error code and
-          // a response that makes sense
-          
-
         } else if (request.contains("github?")) {
           // pulls the query from the request and runs it with GitHub's REST API
           // check out https://docs.github.com/rest/reference/
@@ -261,12 +258,46 @@ class WebServer {
           Map<String, String> query_pairs = new LinkedHashMap<String, String>();
           query_pairs = splitQuery(request.replace("github?", ""));
           String json = fetchURL("https://api.github.com/" + query_pairs.get("query"));
-          System.out.println(json);
+//          System.out.println(json);
+
+          // new String Builder
+          StringBuilder jsonBuild = new StringBuilder();
+
+          // saving it as JSON array (if it sere not an array it woudl need to be a JSONObject)
+          JSONArray repoArray = new JSONArray(json);
+
+          // new JSON which we want to save later on
+          JSONArray newjSON = new JSONArray();
+
+          // go through all the entries in the JSON array (so all the repos of the user)
+          for(int i=0; i<repoArray.length(); i++) {
+
+            // now we have a JSON object, one repo
+            JSONObject repo = repoArray.getJSONObject(i);
+            jsonBuild.append("------------------------------\n");
+
+            // get repo name
+            String repoName = repo.getString("full_name");
+            jsonBuild.append("full_name: " + repoName + "\n");
+//            System.out.println(repoName);
+
+            // get repo id
+            String repoId = repo.getString("id");
+            jsonBuild.append("ID: " + repoId + "\n");
+//            System.out.println(repoId);
+
+            // owner is a JSON object in the repo object, get it and save it in own variable then read the login name
+            JSONObject owner = repo.getJSONObject("owner");
+            String ownername = owner.getString("login");
+            jsonBuild.append("Owner Login: " + ownername + "\n");
+//            System.out.println(ownername);
+          }
 
           builder.append("HTTP/1.1 200 OK\n");
           builder.append("Content-Type: text/html; charset=utf-8\n");
           builder.append("\n");
-          builder.append("Check the todos mentioned in the Java source file");
+          builder.append(jsonBuild);
+          builder.append("------------------------------\n")
           // TODO: Parse the JSON returned by your fetch and create an appropriate
           // response based on what the assignment document asks for
 
