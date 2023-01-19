@@ -204,28 +204,34 @@ class WebServer {
           Integer num2 = 1;
           boolean q = true;
 
-          // extract path parameters
-          try {
-            query_pairs = splitQuery(request.replace("multiply?", ""));
-            try {
-              num1 = Integer.parseInt(query_pairs.get("num1"));
-            } catch (Exception ex) {
-              q = false;
-              builder.append("HTTP/1.1 422 Unprocessable Entity - num1\n");
-              builder.append("Using default value for num1: 1\n");
-            }
-
-            try {
-              num2 = Integer.parseInt(query_pairs.get("num2"));
-            } catch (Exception ex) {
-              q = false;
-              builder.append("HTTP/1.1 422 Unprocessable Entity - num2\n");
-              builder.append("Using default value for num2: 1\n");
-            }
-          } catch (Exception ex) {
-            q = false;
+          // check for arguments
+          if (request.equals("multiply?")) {
             builder.append("HTTP/1.1 418 I'm a Little Teapot - and there are query errors\n");
             builder.append("Using default values for num1 and num2: 1\n");
+          } else {
+            // extract path parameters
+            try {
+              query_pairs = splitQuery(request.replace("multiply?", ""));
+              try {
+                num1 = Integer.parseInt(query_pairs.get("num1"));
+              } catch (Exception ex) {
+                q = false;
+                builder.append("HTTP/1.1 422 Unprocessable Entity - num1\n");
+                builder.append("Using default value for num1: 1\n");
+              }
+
+              try {
+                num2 = Integer.parseInt(query_pairs.get("num2"));
+              } catch (Exception ex) {
+                q = false;
+                builder.append("HTTP/1.1 422 Unprocessable Entity - num2\n");
+                builder.append("Using default value for num2: 1\n");
+              }
+            } catch (Exception ex) {
+              q = false;
+              builder.append("HTTP/1.1 418 I'm a Little Teapot - and there are query errors\n");
+              builder.append("Using default values for num1 and num2: 1\n");
+            }
           }
 
           // do math
@@ -290,7 +296,7 @@ class WebServer {
    * @return Map of all parameters and their specific values
    * @throws UnsupportedEncodingException If the URLs aren't encoded with UTF-8
    */
-  public static Map<String, String> splitQuery(String query) throws UnsupportedEncodingException, Exception {
+  public static Map<String, String> splitQuery(String query) throws UnsupportedEncodingException {
     Map<String, String> query_pairs = new LinkedHashMap<String, String>();
     // "q=hello+world%2Fme&bob=5"
     try {
@@ -301,8 +307,8 @@ class WebServer {
         query_pairs.put(URLDecoder.decode(pair.substring(0, idx), "UTF-8"),
                 URLDecoder.decode(pair.substring(idx + 1), "UTF-8"));
       }
-    } catch (Exception ex) {
-      throw new Exception("Query Split");
+    } catch (UnsupportedEncodingException ex) {
+      query_pairs = null;
     }
 
     // {{"q", "hello world/me"}, {"bob","5"}}
