@@ -222,7 +222,7 @@ class WebServer {
               builder.append("HTTP/1.1 422 Unprocessable Entity - num2\n");
               builder.append("Using default value for num2: 1\n");
             }
-          } catch (UnsupportedEncodingException ex) {
+          } catch (Exception ex) {
             q = false;
             builder.append("HTTP/1.1 418 I'm a Little Teapot - and there are query errors\n");
             builder.append("Using default values for num1 and num2: 1\n");
@@ -301,12 +301,12 @@ class WebServer {
         query_pairs.put(URLDecoder.decode(pair.substring(0, idx), "UTF-8"),
                 URLDecoder.decode(pair.substring(idx + 1), "UTF-8"));
       }
-      // {{"q", "hello world/me"}, {"bob","5"}}
-      return query_pairs;
-    } catch (UnsupportedEncodingException ex) {
-      throw new UnsupportedEncodingException("Query Split");
+    } catch (Exception ex) {
+      throw new Exception("Query Split");
     }
 
+    // {{"q", "hello world/me"}, {"bob","5"}}
+    return query_pairs;
   }
 
   /**
