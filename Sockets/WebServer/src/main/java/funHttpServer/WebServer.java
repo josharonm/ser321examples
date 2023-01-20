@@ -353,8 +353,21 @@ class WebServer {
           try {
             query_pairs = splitQuery(request.replace("age?", ""));
 
+            String name1 = query_pairs.get("name1");
+            String name2 = query_pairs.get("name2");
+
             try {
-              String json = fetchURL("https://api.agify.io/?" + query_pairs.get("query"));
+              if (name1 != null && !name1.isEmpty() && name2 != null && !name2.isEmpty()) {
+                // 2 query
+                String json = fetchURL("https://api.agify.io/?name[]=" + name1 + "&name[]=" + name2);
+              } else if (name1 != null && !name1.isEmpty() || name2 != null && !name2.isEmpty()) {
+                // one query
+                String json = fetchURL("https://api.agify.io/?name[]=" + name1);
+              } else {
+                q = false;
+                builder.append("HTTP/1.1 400 Bad Request\n");
+                jsonBuild.append("I'm hungry. Need path.");
+              }
 
               if (json.equalsIgnoreCase("null")) {
                 q = false;
