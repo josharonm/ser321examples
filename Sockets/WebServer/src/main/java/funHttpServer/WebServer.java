@@ -367,10 +367,10 @@ class WebServer {
                 JSONArray ageArray = new JSONArray(json);
 
                 // go through all the entries in the JSON array
-                for(int i=0; i<repoArray.length(); i++) {
+                for(int i=0; i<ageArray.length(); i++) {
 
                   // now we have a JSON object
-                  JSONObject repo = repoArray.getJSONObject(i);
+                  JSONObject repo = ageArray.getJSONObject(i);
                   jsonBuild.append("------------------------------\n");
 
                   // get name
