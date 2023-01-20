@@ -329,15 +329,9 @@ class WebServer {
           builder.append(jsonBuild);
           builder.append("------------------------------\n");
 
-          // TODO: Parse the JSON returned by your fetch and create an appropriate
-          // response based on what the assignment document asks for
-
         } else if (request.contains("age?")) {
         // pulls the query from the request and runs it with Agify API
         // check out https://api.agify.io/
-        //
-        // HINT: REST is organized by nesting topics. Figure out the biggest one first,
-        //     then drill down to what you care about
 
         Map<String, String> query_pairs = new LinkedHashMap<String, String>();
 
@@ -348,7 +342,7 @@ class WebServer {
 
         if (request.equalsIgnoreCase("age?")) {
           builder.append("HTTP/1.1 418 I'm a Little Teapot - and there are query errors\n");
-          jsonBuild.append("I'm hungry. Need path.\n");
+          jsonBuild.append("I'm hungry. Need path. \n");
           q = false;
         } else {
           try {
@@ -370,13 +364,13 @@ class WebServer {
               } else {
                 q = false;
                 builder.append("HTTP/1.1 400 Bad Request\n");
-                jsonBuild.append("I'm hungry. Need path.");
+                jsonBuild.append("I'm hungry. Need path. ");
               }
 
               if (json.equalsIgnoreCase("null")) {
                 q = false;
                 builder.append("HTTP/1.1 400 Bad Request\n");
-                jsonBuild.append("I'm hungry. Need path.");
+                jsonBuild.append("I'm hungry. Need path. ");
               } else {
                 //          System.out.println(json);
 
@@ -402,12 +396,12 @@ class WebServer {
             } catch (Exception ex) {
               q = false;
               builder.append("HTTP/1.1 422 Unprocessable Entity - the path is broken\n");
-              jsonBuild.append("The Path is Broken.");
+              jsonBuild.append("The Path is Broken. ");
             }
           } catch (Exception ex) {
             q = false;
             builder.append("HTTP/1.1 418 I'm a Little Teapot - and there are query errors\n");
-            jsonBuild.append("Query Errors");
+            jsonBuild.append("Query Errors ");
           }
         }
 
@@ -419,10 +413,69 @@ class WebServer {
         builder.append(jsonBuild);
         builder.append("------------------------------\n");
 
-        // TODO: Parse the JSON returned by your fetch and create an appropriate
-        // response based on what the assignment document asks for
+      } else if (request.contains("numbers?")) {
+          // pulls the query from the request and runs it with Numbers API
+          // check out http://numbersapi.com/
 
-      } else {
+          Map<String, String> query_pairs = new LinkedHashMap<String, String>();
+
+          boolean q = true;
+          // new String Builder
+          StringBuilder numbersBuild = new StringBuilder();
+          String numbers = null;
+
+          if (request.equalsIgnoreCase("numbers?")) {
+            builder.append("HTTP/1.1 418 I'm a Little Teapot - and there are query errors\n");
+            numbersBuild.append("I'm hungry. Need number. \n");
+            q = false;
+          } else {
+            try {
+              query_pairs = splitQuery(request.replace("numbers?", ""));
+
+              String num = query_pairs.get("num");
+              String cat = query_pairs.get("cat");
+
+              if (num == null && num.isEmpty()) {
+                builder.append("HTTP/1.1 400 Bad Request\n");
+                numbersBuild.append("I'm hungry. Need number. \n");
+                q = false;
+              } else {
+                try {
+                  if (cat == null && cat.isEmpty()) {
+                    apiResp = fetchURL("http://numbersapi.com/" + num + "/" + cat);
+                  } else {
+                    apiResp = fetchURL("http://numbersapi.com/" + num);
+                  }
+
+                  if (apiResp.equalsIgnoreCase("null")) {
+                    q = false;
+                    builder.append("HTTP/1.1 400 Bad Request\n");
+                    numbersBuild.append("I'm hungry. Path Broken. ");
+                  } else {
+                    numbersBuild.append("\n" + apiResp + "\n");
+                  }
+                } catch (Exception ex) {
+                  q = false;
+                  builder.append("HTTP/1.1 422 Unprocessable Entity - the path is broken\n");
+                  numbersBuild.append("The Path is Broken. ");
+                }
+              }
+            } catch (Exception ex) {
+              q = false;
+              builder.append("HTTP/1.1 418 I'm a Little Teapot - and there are query errors\n");
+              numbersBuild.append("Query Errors ");
+            }
+          }
+
+          if (q == true) {
+            builder.append("HTTP/1.1 200 OK\n");
+          }
+          builder.append("Content-Type: text/html; charset=utf-8\n");
+          builder.append("\n");
+          builder.append(jsonBuild);
+          builder.append("------------------------------\n");
+
+        } else {
           // if the request is not recognized at all
 
           builder.append("HTTP/1.1 400 Bad Request\n");
