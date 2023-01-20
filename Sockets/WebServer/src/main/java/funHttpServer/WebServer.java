@@ -266,7 +266,7 @@ class WebServer {
 
           if (request.equalsIgnoreCase("github?")) {
             builder.append("HTTP/1.1 418 I'm a Little Teapot - and there are query errors\n");
-            jsonBuild.append("I'm hungry. Need path.\n");
+            jsonBuild.append("I'm hungry. Need path. \n");
             q = false;
           } else {
             try {
@@ -278,7 +278,7 @@ class WebServer {
                 if (json.equalsIgnoreCase("null")) {
                   q = false;
                   builder.append("HTTP/1.1 400 Bad Request\n");
-                  jsonBuild.append("I'm hungry. Need path.");
+                  jsonBuild.append("API Fetch Error. \n");
                 } else {
                   //          System.out.println(json);
 
@@ -312,12 +312,12 @@ class WebServer {
               } catch (Exception ex) {
                 q = false;
                 builder.append("HTTP/1.1 422 Unprocessable Entity - the path is broken\n");
-                jsonBuild.append("The Path is Broken.");
+                jsonBuild.append("Path is broken. \n");
               }
             } catch (Exception ex) {
               q = false;
               builder.append("HTTP/1.1 418 I'm a Little Teapot - and there are query errors\n");
-              jsonBuild.append("Query Errors");
+              jsonBuild.append("I'm hungry. Need path. \n");
             }
           }
 
@@ -352,25 +352,25 @@ class WebServer {
             String name2 = query_pairs.get("name2");
 
             try {
-              if (name1 != null && !name1.isEmpty() && name2 != null && !name2.isEmpty()) {
+              if (name1 != null && !name1.trim().isEmpty() && name2 != null && !name2.trim().isEmpty()) {
                 // 2 query
                 json = fetchURL("https://api.agify.io/?name[]=" + name1 + "&name[]=" + name2);
-              } else if (name1 != null && !name1.isEmpty()) {
+              } else if (name1 != null && !name1.trim().isEmpty()) {
                 // one query
                 json = fetchURL("https://api.agify.io/?name[]=" + name1);
-              } else if (name2 != null && !name2.isEmpty()) {
+              } else if (name2 != null && !name2.trim().isEmpty()) {
                 // one query
                 json = fetchURL("https://api.agify.io/?name[]=" + name2);
               } else {
                 q = false;
                 builder.append("HTTP/1.1 400 Bad Request\n");
-                jsonBuild.append("I'm hungry. Need path. ");
+                jsonBuild.append("API Fetch Error. \n");
               }
 
               if (json.equalsIgnoreCase("null")) {
                 q = false;
                 builder.append("HTTP/1.1 400 Bad Request\n");
-                jsonBuild.append("I'm hungry. Need path. ");
+                jsonBuild.append("API Fetch Error. \n");
               } else {
                 //          System.out.println(json);
 
@@ -396,12 +396,12 @@ class WebServer {
             } catch (Exception ex) {
               q = false;
               builder.append("HTTP/1.1 422 Unprocessable Entity - the path is broken\n");
-              jsonBuild.append("The Path is Broken. ");
+              jsonBuild.append("Path is Broken. \n");
             }
           } catch (Exception ex) {
             q = false;
             builder.append("HTTP/1.1 418 I'm a Little Teapot - and there are query errors\n");
-            jsonBuild.append("Query Errors ");
+            jsonBuild.append("I'm hungry. Need path. \n");
           }
         }
 
@@ -435,13 +435,13 @@ class WebServer {
               String num = query_pairs.get("num");
               String cat = query_pairs.get("cat");
 
-              if (num == null && num.isEmpty()) {
+              if (num == null || num.trim().isEmpty()) {
                 builder.append("HTTP/1.1 400 Bad Request\n");
-                numbersBuild.append("I'm hungry. Need number. \n");
+                numbersBuild.append("API Fetch Error. \n");
                 q = false;
               } else {
                 try {
-                  if (cat == null && cat.isEmpty()) {
+                  if (cat == null || cat.trim().isEmpty()) {
                     apiResp = fetchURL("http://numbersapi.com/" + num + "/" + cat);
                   } else {
                     apiResp = fetchURL("http://numbersapi.com/" + num);
@@ -450,20 +450,20 @@ class WebServer {
                   if (apiResp.equalsIgnoreCase("null")) {
                     q = false;
                     builder.append("HTTP/1.1 400 Bad Request\n");
-                    numbersBuild.append("I'm hungry. Path Broken. ");
+                    numbersBuild.append("API Fetch Error. \n");
                   } else {
                     numbersBuild.append("\n" + apiResp + "\n");
                   }
                 } catch (Exception ex) {
                   q = false;
                   builder.append("HTTP/1.1 422 Unprocessable Entity - the path is broken\n");
-                  numbersBuild.append("The Path is Broken. ");
+                  numbersBuild.append("Path is Broken. \n");
                 }
               }
             } catch (Exception ex) {
               q = false;
               builder.append("HTTP/1.1 418 I'm a Little Teapot - and there are query errors\n");
-              numbersBuild.append("Query Errors ");
+              numbersBuild.append("I'm hungry. Need number. \n");
             }
           }
 
