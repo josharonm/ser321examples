@@ -344,6 +344,7 @@ class WebServer {
         boolean q = true;
         // new String Builder
         StringBuilder jsonBuild = new StringBuilder();
+        String json = null;
 
         if (request.equalsIgnoreCase("age?")) {
           builder.append("HTTP/1.1 418 I'm a Little Teapot - and there are query errors\n");
@@ -359,10 +360,10 @@ class WebServer {
             try {
               if (name1 != null && !name1.isEmpty() && name2 != null && !name2.isEmpty()) {
                 // 2 query
-                String json = fetchURL("https://api.agify.io/?name[]=" + name1 + "&name[]=" + name2);
+                json = fetchURL("https://api.agify.io/?name[]=" + name1 + "&name[]=" + name2);
               } else if (name1 != null && !name1.isEmpty() || name2 != null && !name2.isEmpty()) {
                 // one query
-                String json = fetchURL("https://api.agify.io/?name[]=" + name1);
+                json = fetchURL("https://api.agify.io/?name[]=" + name1);
               } else {
                 q = false;
                 builder.append("HTTP/1.1 400 Bad Request\n");
