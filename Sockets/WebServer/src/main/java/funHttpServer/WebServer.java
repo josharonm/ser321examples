@@ -442,9 +442,9 @@ class WebServer {
               } else {
                 try {
                   if (cat == null || cat.trim().isEmpty()) {
-                    apiResp = fetchURL("http://numbersapi.com/" + num + "/" + cat);
-                  } else {
                     apiResp = fetchURL("http://numbersapi.com/" + num);
+                  } else {
+                    apiResp = fetchURL("http://numbersapi.com/" + num + "/" + cat);
                   }
 
                   if (apiResp.equalsIgnoreCase("null")) {
