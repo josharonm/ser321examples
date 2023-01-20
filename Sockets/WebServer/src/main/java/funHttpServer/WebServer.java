@@ -290,7 +290,7 @@ class WebServer {
 
                     // now we have a JSON object, one repo
                     JSONObject repo = repoArray.getJSONObject(i);
-                    jsonBuild.append("------------------------------\n");
+                    jsonBuild.append("---\n");
 
                     // get repo name
                     String repoName = repo.getString("full_name");
@@ -327,7 +327,7 @@ class WebServer {
           builder.append("Content-Type: text/html; charset=utf-8\n");
           builder.append("\n");
           builder.append(jsonBuild);
-          builder.append("------------------------------\n");
+          builder.append("---\n");
 
         } else if (request.contains("age?")) {
         // pulls the query from the request and runs it with Agify API
@@ -382,7 +382,7 @@ class WebServer {
 
                   // now we have a JSON object
                   JSONObject repo = ageArray.getJSONObject(i);
-                  jsonBuild.append("------------------------------\n");
+                  jsonBuild.append("---\n");
 
                   // get name
                   String givenName = repo.getString("name");
@@ -411,7 +411,7 @@ class WebServer {
         builder.append("Content-Type: text/html; charset=utf-8\n");
         builder.append("\n");
         builder.append(jsonBuild);
-        builder.append("------------------------------\n");
+        builder.append("---\n");
 
       } else if (request.contains("numbers?")) {
           // pulls the query from the request and runs it with Numbers API
@@ -473,7 +473,6 @@ class WebServer {
           builder.append("Content-Type: text/html; charset=utf-8\n");
           builder.append("\n");
           builder.append(numbersBuild);
-          builder.append("------------------------------\n");
 
         } else {
           // if the request is not recognized at all
