@@ -361,9 +361,12 @@ class WebServer {
               if (name1 != null && !name1.isEmpty() && name2 != null && !name2.isEmpty()) {
                 // 2 query
                 json = fetchURL("https://api.agify.io/?name[]=" + name1 + "&name[]=" + name2);
-              } else if (name1 != null && !name1.isEmpty() || name2 != null && !name2.isEmpty()) {
+              } else if (name1 != null && !name1.isEmpty()) {
                 // one query
                 json = fetchURL("https://api.agify.io/?name[]=" + name1);
+              } else if (name2 != null && !name2.isEmpty()) {
+                // one query
+                json = fetchURL("https://api.agify.io/?name[]=" + name2);
               } else {
                 q = false;
                 builder.append("HTTP/1.1 400 Bad Request\n");
