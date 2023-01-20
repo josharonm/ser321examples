@@ -422,7 +422,7 @@ class WebServer {
           boolean q = true;
           // new String Builder
           StringBuilder numbersBuild = new StringBuilder();
-          String numbers = null;
+          String apiResp = null;
 
           if (request.equalsIgnoreCase("numbers?")) {
             builder.append("HTTP/1.1 418 I'm a Little Teapot - and there are query errors\n");
@@ -472,7 +472,7 @@ class WebServer {
           }
           builder.append("Content-Type: text/html; charset=utf-8\n");
           builder.append("\n");
-          builder.append(jsonBuild);
+          builder.append(numbersBuild);
           builder.append("------------------------------\n");
 
         } else {
