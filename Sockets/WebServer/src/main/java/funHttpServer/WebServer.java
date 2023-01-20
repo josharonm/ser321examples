@@ -207,7 +207,7 @@ class WebServer {
           StringBuilder multBuild = new StringBuilder();
 
           // check for arguments
-          if (request.equals("multiply?")) {
+          if (request.equalsIgnoreCase("multiply?")) {
             builder.append("HTTP/1.1 418 I'm a Little Teapot - and there are query errors\n");
             multBuild.append("Using default values for num1 and num2: 1\n");
             q = false;
@@ -264,7 +264,7 @@ class WebServer {
           // new String Builder
           StringBuilder jsonBuild = new StringBuilder();
 
-          if (request.equals("github?")) {
+          if (request.equalsIgnoreCase("github?")) {
             builder.append("HTTP/1.1 418 I'm a Little Teapot - and there are query errors\n");
             jsonBuild.append("I'm hungry. Need path.\n");
             q = false;
@@ -284,9 +284,6 @@ class WebServer {
 
                   // saving it as JSON array (if it sere not an array it woudl need to be a JSONObject)
                   JSONArray repoArray = new JSONArray(json);
-
-                  // new JSON which we want to save later on
-                  JSONArray newjSON = new JSONArray();
 
                   // go through all the entries in the JSON array (so all the repos of the user)
                   for(int i=0; i<repoArray.length(); i++) {
@@ -335,7 +332,80 @@ class WebServer {
           // TODO: Parse the JSON returned by your fetch and create an appropriate
           // response based on what the assignment document asks for
 
+        } else if (request.contains("age?")) {
+        // pulls the query from the request and runs it with Agify API
+        // check out https://api.agify.io/
+        //
+        // HINT: REST is organized by nesting topics. Figure out the biggest one first,
+        //     then drill down to what you care about
+
+        Map<String, String> query_pairs = new LinkedHashMap<String, String>();
+
+        boolean q = true;
+        // new String Builder
+        StringBuilder jsonBuild = new StringBuilder();
+
+        if (request.equalsIgnoreCase("age?")) {
+          builder.append("HTTP/1.1 418 I'm a Little Teapot - and there are query errors\n");
+          jsonBuild.append("I'm hungry. Need path.\n");
+          q = false;
         } else {
+          try {
+            query_pairs = splitQuery(request.replace("age?", ""));
+
+            try {
+              String json = fetchURL("https://api.agify.io/?" + query_pairs.get("query"));
+
+              if (json.equalsIgnoreCase("null")) {
+                q = false;
+                builder.append("HTTP/1.1 400 Bad Request\n");
+                jsonBuild.append("I'm hungry. Need path.");
+              } else {
+                //          System.out.println(json);
+
+                // saving it as JSON array (if it were not an array it would need to be a JSONObject)
+                JSONArray ageArray = new JSONArray(json);
+
+                // go through all the entries in the JSON array
+                for(int i=0; i<repoArray.length(); i++) {
+
+                  // now we have a JSON object
+                  JSONObject repo = repoArray.getJSONObject(i);
+                  jsonBuild.append("------------------------------\n");
+
+                  // get name
+                  String givenName = repo.getString("name");
+                  jsonBuild.append("Name: " + givenName + " \n");
+
+                  // get age
+                  String returnAge = Integer.toString(repo.getInt("age"));
+                  jsonBuild.append("Age: " + returnAge + " \n");
+                }
+              }
+            } catch (Exception ex) {
+              q = false;
+              builder.append("HTTP/1.1 422 Unprocessable Entity - the path is broken\n");
+              jsonBuild.append("The Path is Broken.");
+            }
+          } catch (Exception ex) {
+            q = false;
+            builder.append("HTTP/1.1 418 I'm a Little Teapot - and there are query errors\n");
+            jsonBuild.append("Query Errors");
+          }
+        }
+
+        if (q == true) {
+          builder.append("HTTP/1.1 200 OK\n");
+        }
+        builder.append("Content-Type: text/html; charset=utf-8\n");
+        builder.append("\n");
+        builder.append(jsonBuild);
+        builder.append("------------------------------\n");
+
+        // TODO: Parse the JSON returned by your fetch and create an appropriate
+        // response based on what the assignment document asks for
+
+      } else {
           // if the request is not recognized at all
 
           builder.append("HTTP/1.1 400 Bad Request\n");
