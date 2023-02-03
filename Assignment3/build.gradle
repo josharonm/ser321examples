@@ -1,0 +1,75 @@
+// set as java application
+apply plugin: 'application'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+   // https://mvnrepository.com/artifact/org.json/json
+implementation group: 'org.json', name: 'json', version: '20200518'
+}
+
+def host = 'localhost'
+def port = 8000
+
+// task reading in the arguments if any given, if not the default from above will be used
+task arguments {
+  if (project.hasProperty("Phost")) {
+    host = project.getProperty("Phost")
+  }
+  if (project.hasProperty("Pport")) {
+    port = project.getProperty("Pport")
+  }
+}
+
+//define main class
+mainClassName = 'PicGuess'
+
+task runServerTCP(type: JavaExec) {
+  group 'tcp'
+  description 'TCP Server'
+
+  classpath = sourceSets.main.runtimeClasspath
+
+  main = 'tcp.Server'
+  standardInput = System.in
+  args port
+}
+
+task runClientTCP(type: JavaExec) {
+  group 'tcp'
+  description 'TCP Client'
+
+  classpath = sourceSets.main.runtimeClasspath
+
+  main = 'tcp.Client'
+  standardInput = System.in
+  // default args
+  args host
+  args port
+}
+
+task runServerUDP(type: JavaExec) {
+  group 'udp'
+  description 'UDP Server'
+
+  classpath = sourceSets.main.runtimeClasspath
+
+  main = 'udp.Server'
+  standardInput = System.in
+  args port
+}
+
+task runClientUDP(type: JavaExec) {
+  group 'udp'
+  description 'UDP Client'
+
+  classpath = sourceSets.main.runtimeClasspath
+
+  main = 'udp.Client'
+  standardInput = System.in
+  // default args
+  args host
+  args port
+}
